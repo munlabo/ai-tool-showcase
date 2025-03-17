@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Heart } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Link } from "react-router-dom";
 
 interface ToolCardProps {
   tool: Tool;
@@ -22,20 +23,24 @@ const ToolCard = ({ tool }: ToolCardProps) => {
 
   return (
     <Card className="overflow-hidden transition-all hover:shadow-md h-full flex flex-col">
-      <div className="aspect-video relative overflow-hidden">
-        <img
-          src={tool.imageUrl}
-          alt={tool.name}
-          className="object-cover w-full h-full transition-transform hover:scale-105"
-        />
-        <div className="absolute top-3 right-3">
-          <Badge variant="secondary">{tool.pricing}</Badge>
+      <Link to={`/tools/${tool.slug}`} className="overflow-hidden">
+        <div className="aspect-video relative overflow-hidden">
+          <img
+            src={tool.imageUrl}
+            alt={tool.name}
+            className="object-cover w-full h-full transition-transform hover:scale-105"
+          />
+          <div className="absolute top-3 right-3">
+            <Badge variant="secondary">{tool.pricing}</Badge>
+          </div>
         </div>
-      </div>
+      </Link>
       
       <CardHeader className="p-4 pb-0">
         <div className="flex justify-between items-start">
-          <h3 className="font-semibold text-lg">{tool.name}</h3>
+          <Link to={`/tools/${tool.slug}`}>
+            <h3 className="font-semibold text-lg hover:text-primary transition-colors">{tool.name}</h3>
+          </Link>
         </div>
         <div className="flex items-center mt-2 text-sm text-muted-foreground">
           <Badge variant="outline" className="mr-2">{tool.category.name}</Badge>
