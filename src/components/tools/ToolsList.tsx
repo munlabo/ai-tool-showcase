@@ -3,12 +3,33 @@ import { useTools } from "@/context/ToolsContext";
 import ToolCard from "./ToolCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Search, Filter } from "lucide-react";
+import { Search, Filter, X } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 const ToolsList = () => {
-  const { filteredTools, searchQuery, setSearchQuery, resetFilters } = useTools();
+  const { 
+    filteredTools, 
+    searchQuery, 
+    setSearchQuery, 
+    resetFilters,
+    tags,
+    categories,
+    selectedTags,
+    selectedCategories
+  } = useTools();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  
+  // Get selected tags and categories names for displaying active filters
+  const selectedTagNames = tags
+    .filter(tag => selectedTags.includes(tag.id))
+    .map(tag => tag.name);
+    
+  const selectedCategoryNames = categories
+    .filter(category => selectedCategories.includes(category.id))
+    .map(category => category.name);
+
+  const hasActiveFilters = selectedTags.length > 0 || selectedCategories.length > 0 || searchQuery;
   
   return (
     <div className="space-y-6">
@@ -21,6 +42,16 @@ const ToolsList = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10"
           />
+          {searchQuery && (
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="absolute right-0 top-0 h-full"
+              onClick={() => setSearchQuery("")}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
         </div>
         
         <div className="flex gap-3 self-end sm:self-auto">
@@ -33,17 +64,48 @@ const ToolsList = () => {
             <Filter className="h-4 w-4 mr-2" />
             Filters
           </Button>
-          {(searchQuery || showMobileFilters) && (
+          {hasActiveFilters && (
             <Button 
               variant="ghost" 
               size="sm"
               onClick={resetFilters}
             >
-              Clear
+              Clear all
             </Button>
           )}
         </div>
       </div>
+      
+      {/* Active filters */}
+      {hasActiveFilters && (
+        <div className="flex flex-wrap gap-2 items-center">
+          {searchQuery && (
+            <Badge variant="outline" className="px-3 py-1 h-8">
+              Search: {searchQuery}
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="ml-1 h-4 w-4 p-0" 
+                onClick={() => setSearchQuery("")}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          
+          {selectedCategoryNames.map(name => (
+            <Badge key={name} variant="outline" className="px-3 py-1 h-8">
+              {name}
+            </Badge>
+          ))}
+          
+          {selectedTagNames.map(name => (
+            <Badge key={name} variant="outline" className="px-3 py-1 h-8">
+              {name}
+            </Badge>
+          ))}
+        </div>
+      )}
       
       {filteredTools.length === 0 ? (
         <div className="text-center py-12">

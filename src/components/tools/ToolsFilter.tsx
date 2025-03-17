@@ -2,14 +2,16 @@
 import { useTools } from "@/context/ToolsContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Tag, Folder } from "lucide-react";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Search, Tag, Folder, X } from "lucide-react";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Toggle } from "@/components/ui/toggle";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 const ToolsFilter = () => {
   const { 
@@ -35,7 +37,7 @@ const ToolsFilter = () => {
             onClick={resetFilters}
             className="h-8 px-2"
           >
-            Clear all
+            <X className="h-4 w-4 mr-1" /> Clear all
           </Button>
         )}
       </div>
@@ -49,22 +51,30 @@ const ToolsFilter = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-2 pt-1">
-              {categories.map(category => (
-                <div key={category.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`category-${category.id}`}
-                    checked={selectedCategories.includes(category.id)}
-                    onCheckedChange={() => toggleCategory(category.id)}
-                  />
-                  <label
-                    htmlFor={`category-${category.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            <div className="space-y-3 pt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={selectedCategories.length === 0 ? "bg-accent text-accent-foreground" : ""}
+                onClick={resetFilters}
+              >
+                Show all
+              </Button>
+              
+              <div className="flex flex-wrap gap-2 mt-2">
+                {categories.map(category => (
+                  <Toggle
+                    key={category.id}
+                    pressed={selectedCategories.includes(category.id)}
+                    onPressedChange={() => toggleCategory(category.id)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-8"
                   >
                     {category.name}
-                  </label>
-                </div>
-              ))}
+                  </Toggle>
+                ))}
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -77,22 +87,30 @@ const ToolsFilter = () => {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-2 pt-1">
-              {tags.map(tag => (
-                <div key={tag.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`tag-${tag.id}`}
-                    checked={selectedTags.includes(tag.id)}
-                    onCheckedChange={() => toggleTag(tag.id)}
-                  />
-                  <label
-                    htmlFor={`tag-${tag.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+            <div className="space-y-3 pt-2">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={selectedTags.length === 0 ? "bg-accent text-accent-foreground" : ""}
+                onClick={resetFilters}
+              >
+                Show all
+              </Button>
+              
+              <div className="flex flex-wrap gap-2 mt-2">
+                {tags.map(tag => (
+                  <Toggle
+                    key={tag.id}
+                    pressed={selectedTags.includes(tag.id)}
+                    onPressedChange={() => toggleTag(tag.id)}
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-8"
                   >
                     {tag.name}
-                  </label>
-                </div>
-              ))}
+                  </Toggle>
+                ))}
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
