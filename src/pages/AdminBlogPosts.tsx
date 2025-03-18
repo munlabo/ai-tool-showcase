@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { 
@@ -250,7 +249,9 @@ const AdminBlogPosts = () => {
                       </TableCell>
                       <TableCell>
                         {post.published ? (
-                          <Badge variant="success">Published</Badge>
+                          <Badge variant="secondary" className="bg-green-500/20 text-green-700 dark:bg-green-500/30 dark:text-green-300">
+                            Published
+                          </Badge>
                         ) : (
                           <Badge variant="secondary">Draft</Badge>
                         )}

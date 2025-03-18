@@ -16,6 +16,7 @@ export interface BlogPost {
     name: string;
     avatar: string;
   };
+  featured?: boolean;
 }
 
 export interface BlogCategory {

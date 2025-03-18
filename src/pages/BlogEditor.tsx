@@ -27,6 +27,7 @@ import Layout from '@/components/layout/Layout';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { BlogPost } from '@/types/blog';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -36,8 +37,10 @@ const formSchema = z.object({
   content: z.string().min(10, 'Content must be at least 10 characters'),
   featured_image: z.string().url('Must be a valid URL').optional(),
   published: z.boolean().default(false),
-  tags: z.array(z.string()).optional(),
+  tags: z.array(z.string()).default([]),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 const BlogEditor = () => {
   const { id } = useParams<{ id: string }>();
@@ -54,7 +57,7 @@ const BlogEditor = () => {
   const updateMutation = useUpdateBlogPost();
   
   // Create form with validation
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -172,34 +175,66 @@ const BlogEditor = () => {
   };
 
   // Form submission handler
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    if (isEditMode && blogPost) {
-      await updateMutation.mutateAsync({
-        ...values,
-        id: blogPost.id,
-        author_id: blogPost.author_id,
-        created_at: blogPost.created_at,
-        updated_at: new Date().toISOString(),
-      });
-      navigate('/admin/blog');
-    } else {
-      // We need the user's ID for the author_id field
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.user) {
-        toast.error('You must be logged in to create a blog post');
-        return;
+  const onSubmit = async (values: FormValues) => {
+    try {
+      if (isEditMode && blogPost) {
+        await updateMutation.mutateAsync({
+          id: blogPost.id,
+          author_id: blogPost.author_id,
+          created_at: blogPost.created_at,
+          updated_at: new Date().toISOString(),
+          title: values.title,
+          slug: values.slug,
+          excerpt: values.excerpt,
+          content: values.content,
+          featured_image: values.featured_image || '',
+          published: values.published,
+          tags: values.tags || [],
+        });
+        toast.success('Blog post updated successfully');
+        navigate('/admin/blog');
+      } else {
+        // We need the user's ID for the author_id field
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session?.user) {
+          toast.error('You must be logged in to create a blog post');
+          return;
+        }
+        
+        await createMutation.mutateAsync({
+          author_id: session.user.id,
+          title: values.title,
+          slug: values.slug,
+          excerpt: values.excerpt,
+          content: values.content,
+          featured_image: values.featured_image || '',
+          published: values.published,
+          tags: values.tags || [],
+        });
+        toast.success('Blog post created successfully');
+        navigate('/admin/blog');
       }
-      
-      await createMutation.mutateAsync({
-        ...values,
-        author_id: session.user.id,
-      });
-      navigate('/admin/blog');
+    } catch (error: any) {
+      toast.error(`Error saving blog post: ${error.message}`);
     }
   };
 
   if (!isAdmin) {
     return null; // We're redirecting in the useEffect
+  }
+
+  if (postLoading && isEditMode) {
+    return (
+      <Layout>
+        <div className="container max-w-4xl mx-auto px-4 py-12">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-3/4"></div>
+            <div className="h-6 bg-muted rounded w-1/4"></div>
+            <div className="h-32 bg-muted rounded"></div>
+          </div>
+        </div>
+      </Layout>
+    );
   }
 
   return (
