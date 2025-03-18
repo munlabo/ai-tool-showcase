@@ -435,7 +435,8 @@ export const useRecentActivity = (limit = 10) => {
         },
         user: {
           id: like.profiles.id,
-          name: like.profiles.avatar,
+          name: like.profiles.name,
+          avatar: like.profiles.avatar, // Ensure this property exists
         }
       }));
 
