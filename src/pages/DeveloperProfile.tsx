@@ -1,4 +1,3 @@
-
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Layout from "@/components/layout/Layout";
@@ -7,7 +6,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Heart, Users, Calendar, Mail, ExternalLink, MapPin, Github, Twitter, Link as LinkIcon, Tool } from "lucide-react";
+import { Heart, Users, Calendar, Mail, ExternalLink, MapPin, Github, Twitter, Link as LinkIcon, Wrench } from "lucide-react";
 import ToolCard from "@/components/tools/ToolCard";
 import { Tool as ToolType } from "@/types/tools";
 import { mockTools } from "@/data/mockTools";
@@ -171,7 +170,7 @@ const DeveloperProfile = () => {
             
             <Card>
               <CardContent className="p-4 flex flex-col items-center justify-center h-full">
-                <Tool className="h-8 w-8 text-brand-purple mb-2" />
+                <Wrench className="h-8 w-8 text-brand-purple mb-2" />
                 <span className="text-2xl font-bold">{developer.toolsCount}</span>
                 <span className="text-muted-foreground text-sm">Tools</span>
               </CardContent>

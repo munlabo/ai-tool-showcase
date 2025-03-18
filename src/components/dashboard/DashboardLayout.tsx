@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { 
   LayoutDashboard, 
-  Tool, 
+  Wrench, 
   MessageSquare, 
   Users, 
   Heart, 
@@ -42,7 +41,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-    { name: "My Tools", path: "/dashboard/tools", icon: Tool },
+    { name: "My Tools", path: "/dashboard/tools", icon: Wrench },
     { name: "Messages", path: "/dashboard/messages", icon: MessageSquare },
     { name: "Community", path: "/dashboard/community", icon: Users },
     { name: "Favorites", path: "/dashboard/favorites", icon: Heart },
@@ -252,7 +251,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/dashboard/tools" className="flex items-center">
-                    <Tool className="mr-2 h-4 w-4" />
+                    <Wrench className="mr-2 h-4 w-4" />
                     <span>My Tools</span>
                   </Link>
                 </DropdownMenuItem>
