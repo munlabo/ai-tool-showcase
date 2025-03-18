@@ -13,6 +13,7 @@ import DeveloperProfile from "./pages/DeveloperProfile";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
+import Community from "./pages/Community";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/tools/:slug" element={<ToolDetail />} />
           <Route path="/developers" element={<ToolsDevelopers />} />
           <Route path="/developers/:slug" element={<DeveloperProfile />} />
+          <Route path="/community" element={<Community />} />
           
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />

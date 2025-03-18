@@ -1,9 +1,9 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Layout from "@/components/layout/Layout";
-import { mockTools } from "@/data/mockTools";
+import { useTool } from "@/hooks/useSupabaseData"; 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,14 +20,13 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
-import { Link } from "react-router-dom";
 
 const ToolDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { toast } = useToast();
-  const tool = mockTools.find(tool => tool.slug === slug);
+  const { data: tool, isLoading, error } = useTool(slug);
   
-  // Mock screenshots for the carousel
+  // Mock screenshots for the carousel (would come from Supabase storage in a real app)
   const [screenshots] = useState([
     { id: 1, url: "/placeholder.svg", alt: "Screenshot 1" },
     { id: 2, url: "/placeholder.svg", alt: "Screenshot 2" },
@@ -58,7 +57,28 @@ const ToolDetail = () => {
     form.reset();
   };
 
-  if (!tool) {
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="container max-w-7xl mx-auto px-4 py-12">
+          <div className="animate-pulse space-y-8">
+            <div className="h-12 bg-gray-100 rounded w-1/3"></div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="lg:col-span-2 space-y-6">
+                <div className="h-64 bg-gray-100 rounded-lg"></div>
+                <div className="h-32 bg-gray-100 rounded-lg"></div>
+              </div>
+              <div className="space-y-6">
+                <div className="h-96 bg-gray-100 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error || !tool) {
     return (
       <Layout>
         <div className="container max-w-7xl mx-auto px-4 py-12">
@@ -295,7 +315,9 @@ const ToolDetail = () => {
                       <AvatarImage src={tool.author.avatar} alt={tool.author.name} />
                       <AvatarFallback>{tool.author.name.charAt(0)}</AvatarFallback>
                     </Avatar>
-                    <p className="font-medium">{tool.author.name}</p>
+                    <Link to={`/developers/${tool.author.id}`} className="font-medium hover:underline">
+                      {tool.author.name}
+                    </Link>
                   </div>
                 </div>
               </div>

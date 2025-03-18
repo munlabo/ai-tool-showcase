@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
@@ -10,99 +9,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Search, ExternalLink } from "lucide-react";
-
-// This would come from your Supabase database
-const mockDevelopers = [
-  {
-    id: "1",
-    name: "Alex Johnson",
-    slug: "alex-johnson",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    description: "AI researcher and developer specializing in natural language processing tools",
-    joinedDate: "2022-03-15",
-    toolsCount: 8,
-    followersCount: 245
-  },
-  {
-    id: "2",
-    name: "Maria Garcia",
-    slug: "maria-garcia",
-    avatar: "https://i.pravatar.cc/150?img=5",
-    description: "Full-stack developer focused on building accessible AI tools for education",
-    joinedDate: "2022-01-22",
-    toolsCount: 5,
-    followersCount: 178
-  },
-  {
-    id: "3",
-    name: "James Wilson",
-    slug: "james-wilson",
-    avatar: "https://i.pravatar.cc/150?img=3",
-    description: "Former Google engineer building AI tools for productivity and automation",
-    joinedDate: "2021-11-30",
-    toolsCount: 12,
-    followersCount: 562
-  },
-  {
-    id: "4",
-    name: "Sophie Chen",
-    slug: "sophie-chen",
-    avatar: "https://i.pravatar.cc/150?img=9",
-    description: "AI ethicist and developer creating responsible AI tools for businesses",
-    joinedDate: "2023-02-18",
-    toolsCount: 3,
-    followersCount: 127
-  },
-  {
-    id: "5",
-    name: "David Kim",
-    slug: "david-kim",
-    avatar: "https://i.pravatar.cc/150?img=8",
-    description: "Machine learning specialist developing computer vision applications",
-    joinedDate: "2021-09-05",
-    toolsCount: 6,
-    followersCount: 310
-  },
-  {
-    id: "6",
-    name: "Emily Roberts",
-    slug: "emily-roberts",
-    avatar: "https://i.pravatar.cc/150?img=11",
-    description: "AI startup founder specializing in content generation tools",
-    joinedDate: "2022-08-12",
-    toolsCount: 4,
-    followersCount: 215
-  },
-  {
-    id: "7",
-    name: "Michael Wong",
-    slug: "michael-wong",
-    avatar: "https://i.pravatar.cc/150?img=6",
-    description: "Data scientist working on predictive analytics tools for businesses",
-    joinedDate: "2023-01-07",
-    toolsCount: 2,
-    followersCount: 98
-  },
-  {
-    id: "8",
-    name: "Sarah Johnson",
-    slug: "sarah-johnson",
-    avatar: "https://i.pravatar.cc/150?img=2",
-    description: "UX designer and developer focused on human-centered AI tools",
-    joinedDate: "2022-05-19",
-    toolsCount: 7,
-    followersCount: 286
-  }
-];
+import { useDevelopers } from "@/hooks/useSupabaseData";
 
 const ToolsDevelopers = () => {
   const [searchQuery, setSearchQuery] = useState("");
   
-  // In a real app, this would fetch from Supabase
-  const { data: developers, isLoading } = useQuery({
-    queryKey: ['developers'],
-    queryFn: () => Promise.resolve(mockDevelopers),
-  });
+  // Fetch developers from Supabase
+  const { data: developers, isLoading } = useDevelopers();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -191,25 +104,27 @@ const ToolsDevelopers = () => {
             )}
           </div>
           
-          <Pagination className="mt-8">
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
+          {!isLoading && filteredDevelopers?.length > 0 && (
+            <Pagination className="mt-8">
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious href="#" />
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#" isActive>1</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">2</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationLink href="#">3</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationNext href="#" />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
         </div>
       </div>
     </Layout>

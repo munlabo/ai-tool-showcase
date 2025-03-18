@@ -1,7 +1,7 @@
 
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { Tool, Tag, Category } from "@/types/tools";
-import { mockTools, mockTags, mockCategories } from "@/data/mockTools";
+import { useTools, useTags, useCategories } from "@/hooks/useSupabaseData";
 
 interface ToolsContextType {
   tools: Tool[];
@@ -11,6 +11,7 @@ interface ToolsContextType {
   selectedTags: string[];
   selectedCategories: string[];
   searchQuery: string;
+  isLoading: boolean;
   setSearchQuery: (query: string) => void;
   toggleTag: (tagId: string) => void;
   toggleCategory: (categoryId: string) => void;
@@ -28,12 +29,18 @@ export const useTools = () => {
 };
 
 export const ToolsProvider = ({ children }: { children: ReactNode }) => {
-  const [tools] = useState<Tool[]>(mockTools);
-  const [tags] = useState<Tag[]>(mockTags);
-  const [categories] = useState<Category[]>(mockCategories);
+  const { data: supabaseTools, isLoading: isLoadingTools } = useSupabaseData.useTools();
+  const { data: supaTags, isLoading: isLoadingTags } = useSupabaseData.useTags();
+  const { data: supaCategories, isLoading: isLoadingCategories } = useSupabaseData.useCategories();
+  
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
+
+  const isLoading = isLoadingTools || isLoadingTags || isLoadingCategories;
+  const tools = supabaseTools || [];
+  const tags = supaTags || [];
+  const categories = supaCategories || [];
 
   const toggleTag = (tagId: string) => {
     setSelectedTags(prev => 
@@ -83,6 +90,7 @@ export const ToolsProvider = ({ children }: { children: ReactNode }) => {
     selectedTags,
     selectedCategories,
     searchQuery,
+    isLoading,
     setSearchQuery,
     toggleTag,
     toggleCategory,
