@@ -13,23 +13,17 @@ const ToolsList = () => {
     searchQuery, 
     setSearchQuery, 
     resetFilters,
-    tags,
     categories,
-    selectedTags,
     selectedCategories
   } = useTools();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   
-  // Get selected tags and categories names for displaying active filters
-  const selectedTagNames = tags
-    .filter(tag => selectedTags.includes(tag.id))
-    .map(tag => tag.name);
-    
+  // Get selected categories names for displaying active filters
   const selectedCategoryNames = categories
     .filter(category => selectedCategories.includes(category.id))
     .map(category => category.name);
 
-  const hasActiveFilters = selectedTags.length > 0 || selectedCategories.length > 0 || searchQuery;
+  const hasActiveFilters = selectedCategories.length > 0 || searchQuery;
   
   return (
     <div className="space-y-6">
@@ -94,12 +88,6 @@ const ToolsList = () => {
           )}
           
           {selectedCategoryNames.map(name => (
-            <Badge key={name} variant="outline" className="px-3 py-1 h-8">
-              {name}
-            </Badge>
-          ))}
-          
-          {selectedTagNames.map(name => (
             <Badge key={name} variant="outline" className="px-3 py-1 h-8">
               {name}
             </Badge>
