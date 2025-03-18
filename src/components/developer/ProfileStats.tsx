@@ -6,11 +6,12 @@ interface ProfileStatsProps {
   likesCount: number;
   followersCount: number;
   toolsCount: number;
-  joinedDate: string;
+  joinedDate?: string;
 }
 
 const ProfileStats = ({ likesCount, followersCount, toolsCount, joinedDate }: ProfileStatsProps) => {
   const formatDate = (dateString: string) => {
+    if (!dateString) return "N/A";
     const date = new Date(dateString);
     return new Intl.DateTimeFormat('en-US', { 
       year: 'numeric', 
@@ -50,7 +51,7 @@ const ProfileStats = ({ likesCount, followersCount, toolsCount, joinedDate }: Pr
           <Calendar className="h-8 w-8 text-brand-purple mb-2" />
           <span className="text-sm font-semibold">Joined</span>
           <span className="text-muted-foreground text-xs text-center">
-            {formatDate(joinedDate)}
+            {joinedDate ? formatDate(joinedDate) : "N/A"}
           </span>
         </CardContent>
       </Card>

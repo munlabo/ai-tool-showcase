@@ -9,6 +9,7 @@ interface ProfileTabsProps {
   toolsCount: number;
   developerTools?: ToolType[];
   isLoadingTools: boolean;
+  developer?: any; // Added to match the props passed in DeveloperProfile
 }
 
 const ProfileTabs = ({ toolsCount, developerTools, isLoadingTools }: ProfileTabsProps) => {

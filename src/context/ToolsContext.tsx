@@ -1,7 +1,7 @@
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, { createContext, useContext, useState, ReactNode } from "react";
 import { Tool, Tag, Category } from "@/types/tools";
-import { useTools, useTags, useCategories } from "@/hooks/useSupabaseData";
+import * as supabaseHooks from "@/hooks/useSupabaseData";
 
 interface ToolsContextType {
   tools: Tool[];
@@ -20,18 +20,18 @@ interface ToolsContextType {
 
 const ToolsContext = createContext<ToolsContextType | undefined>(undefined);
 
-export const useTools = () => {
+export const useToolsContext = () => {
   const context = useContext(ToolsContext);
   if (!context) {
-    throw new Error("useTools must be used within a ToolsProvider");
+    throw new Error("useToolsContext must be used within a ToolsProvider");
   }
   return context;
 };
 
 export const ToolsProvider = ({ children }: { children: ReactNode }) => {
-  const { data: supabaseTools, isLoading: isLoadingTools } = useSupabaseData.useTools();
-  const { data: supaTags, isLoading: isLoadingTags } = useSupabaseData.useTags();
-  const { data: supaCategories, isLoading: isLoadingCategories } = useSupabaseData.useCategories();
+  const { data: supabaseTools, isLoading: isLoadingTools } = supabaseHooks.useTools();
+  const { data: supaTags, isLoading: isLoadingTags } = supabaseHooks.useTags();
+  const { data: supaCategories, isLoading: isLoadingCategories } = supabaseHooks.useCategories();
   
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);

@@ -41,21 +41,22 @@ const DeveloperProfile = () => {
               toolsCount={developer.toolsCount} 
               followersCount={developer.followersCount} 
               likesCount={developer.likesCount} 
+              joinedDate={developer.joinedDate}
             />
           </div>
           
           {/* Main Content - Right Column */}
           <div className="md:col-span-3">
             <ProfileSkillsServices 
-              longDescription={developer.longDescription}
               description={developer.description}
+              longDescription={developer.longDescription}
               skills={developer.skills} 
               services={developer.services} 
             />
             
             <ProfileTabs 
-              developer={developer}
-              tools={developerTools || []}
+              toolsCount={developer.toolsCount}
+              developerTools={developerTools || []}
               isLoadingTools={isLoadingTools}
             />
           </div>

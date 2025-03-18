@@ -5,12 +5,26 @@ import { Badge } from "@/components/ui/badge";
 interface ProfileSkillsServicesProps {
   services: string[];
   skills: string[];
+  description?: string;
+  longDescription?: string;
 }
 
-const ProfileSkillsServices = ({ services, skills }: ProfileSkillsServicesProps) => {
+const ProfileSkillsServices = ({ services, skills, description, longDescription }: ProfileSkillsServicesProps) => {
   return (
     <>
-      <Card>
+      {(description || longDescription) && (
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>About</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {description && <p>{description}</p>}
+            {longDescription && <p className="text-muted-foreground">{longDescription}</p>}
+          </CardContent>
+        </Card>
+      )}
+      
+      <Card className="mb-6">
         <CardHeader>
           <CardTitle>Services</CardTitle>
         </CardHeader>
