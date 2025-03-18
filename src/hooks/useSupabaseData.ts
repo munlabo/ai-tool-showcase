@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
@@ -436,7 +437,7 @@ export const useRecentActivity = (limit = 10) => {
         user: {
           id: like.profiles.id,
           name: like.profiles.name,
-          avatar: like.profiles.avatar, // Ensure this property exists
+          avatar: like.profiles.avatar, // Ensuring avatar is always included
         }
       }));
 

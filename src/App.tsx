@@ -14,6 +14,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Community from "./pages/Community";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import AdminBlogPosts from "./pages/AdminBlogPosts";
+import BlogEditor from "./pages/BlogEditor";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,8 @@ const App = () => (
           <Route path="/developers" element={<ToolsDevelopers />} />
           <Route path="/developers/:slug" element={<DeveloperProfile />} />
           <Route path="/community" element={<Community />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogPost />} />
           
           {/* Auth Routes */}
           <Route path="/login" element={<Login />} />
@@ -39,6 +45,11 @@ const App = () => (
           {/* Dashboard Routes */}
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/*" element={<Dashboard />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin/blog" element={<AdminBlogPosts />} />
+          <Route path="/admin/blog/new" element={<BlogEditor />} />
+          <Route path="/admin/blog/edit/:id" element={<BlogEditor />} />
           
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

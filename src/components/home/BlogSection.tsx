@@ -46,12 +46,12 @@ const BlogSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-background border-t border-border">
       <div className="container max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12">
           <div>
             <h2 className="text-3xl font-bold sm:text-4xl">Latest From Our Blog</h2>
-            <p className="mt-4 text-xl text-gray-600">
+            <p className="mt-4 text-xl text-muted-foreground">
               Insights, trends, and deep dives into the world of AI
             </p>
           </div>
@@ -70,7 +70,7 @@ const BlogSection = () => {
               to={`/blog/${post.slug}`}
               className="group"
             >
-              <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-all h-full flex flex-col">
+              <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden hover:shadow-md transition-all h-full flex flex-col">
                 <div className="aspect-video relative overflow-hidden">
                   <img 
                     src={post.imageUrl} 
@@ -80,27 +80,27 @@ const BlogSection = () => {
                 </div>
                 
                 <div className="p-5 flex-grow flex flex-col">
-                  <div className="flex items-center text-gray-500 text-xs mb-3">
+                  <div className="flex items-center text-muted-foreground text-xs mb-3">
                     <div className="flex items-center">
                       <Calendar className="h-3 w-3 mr-1" />
                       {post.date}
                     </div>
-                    <div className="w-1 h-1 rounded-full bg-gray-300 mx-2"></div>
+                    <div className="w-1 h-1 rounded-full bg-muted mx-2"></div>
                     <div className="flex items-center">
                       <Clock className="h-3 w-3 mr-1" />
                       {post.readTime}
                     </div>
                   </div>
                   
-                  <h3 className="font-semibold text-lg group-hover:text-brand-purple transition-colors mb-2">
+                  <h3 className="font-semibold text-lg group-hover:text-primary transition-colors mb-2">
                     {post.title}
                   </h3>
                   
-                  <p className="text-gray-600 text-sm flex-grow">
+                  <p className="text-muted-foreground text-sm flex-grow">
                     {post.excerpt}
                   </p>
                   
-                  <div className="mt-4 text-brand-purple font-medium text-sm flex items-center">
+                  <div className="mt-4 text-primary font-medium text-sm flex items-center">
                     Read more
                     <ArrowRight className="ml-1 h-3 w-3" />
                   </div>
