@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
@@ -408,7 +407,7 @@ export const useRecentActivity = (limit = 10) => {
       if (likesError) throw likesError;
 
       // Combine and sort by date
-      const comments = commentsData.map((comment) => ({
+      const comments = commentsData.map((comment: any) => ({
         id: comment.id,
         type: 'comment' as const,
         createdAt: comment.created_at,
@@ -425,7 +424,7 @@ export const useRecentActivity = (limit = 10) => {
         }
       }));
 
-      const likes = likesData.map((like) => ({
+      const likes = likesData.map((like: any) => ({
         id: `${like.profiles.id}-${like.tools.id}`,
         type: 'like' as const,
         createdAt: like.created_at,
@@ -436,8 +435,7 @@ export const useRecentActivity = (limit = 10) => {
         },
         user: {
           id: like.profiles.id,
-          name: like.profiles.name,
-          avatar: like.profiles.avatar,
+          name: like.profiles.avatar,
         }
       }));
 

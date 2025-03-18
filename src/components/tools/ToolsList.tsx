@@ -1,5 +1,4 @@
-
-import { useTools } from "@/context/ToolsContext";
+import { useToolsContext } from "@/context/ToolsContext";
 import ToolCard from "./ToolCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -15,7 +14,7 @@ const ToolsList = () => {
     resetFilters,
     categories,
     selectedCategories
-  } = useTools();
+  } = useToolsContext();
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   
   // Get selected categories names for displaying active filters

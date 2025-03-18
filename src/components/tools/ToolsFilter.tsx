@@ -1,5 +1,5 @@
 
-import { useTools } from "@/context/ToolsContext";
+import { useToolsContext } from "@/context/ToolsContext";
 import { Button } from "@/components/ui/button";
 import { Folder, X } from "lucide-react";
 import {
@@ -16,7 +16,7 @@ const ToolsFilter = () => {
     selectedCategories, 
     toggleCategory,
     resetFilters
-  } = useTools();
+  } = useToolsContext();
 
   const hasActiveFilters = selectedCategories.length > 0;
 
