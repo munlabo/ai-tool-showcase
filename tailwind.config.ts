@@ -68,7 +68,10 @@ export default {
 					'purple-light': '#A78BFA',
 					'purple-dark': '#5B21B6',
 					gray: '#F9FAFB',
-					'gray-dark': '#4B5563'
+					'gray-dark': '#4B5563',
+					'dark-bg': '#121212',
+					'dark-card': '#1A1A1A',
+					'dark-border': '#2A2A2A'
 				}
 			},
 			borderRadius: {
@@ -137,6 +140,11 @@ export default {
 				'slide-in': 'slide-in 0.5s ease-out',
 				wiggle: 'wiggle 1s ease-in-out infinite',
 				float: 'float 3s ease-in-out infinite'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'dark-radial': 'radial-gradient(circle at center, #2a2a2a 0%, #121212 100%)',
+				'hero-pattern': "url('/lovable-uploads/60f5507c-1950-44b6-9fe9-28492070bc42.png')",
 			}
 		}
 	},

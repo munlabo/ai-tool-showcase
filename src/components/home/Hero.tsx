@@ -5,26 +5,26 @@ import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-[#F9F8FF] border-b border-gray-100 pt-16 pb-20 md:pt-24 md:pb-32">
+    <section className="relative overflow-hidden bg-brand-dark-bg border-b border-gray-800 pt-16 pb-20 md:pt-24 md:pb-32 text-white">
       {/* Background Decorations */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-purple-100 rounded-full blur-3xl opacity-60"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-100 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute top-20 left-10 w-64 h-64 bg-brand-purple/20 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-900/20 rounded-full blur-3xl opacity-60"></div>
       </div>
       
       <div className="container px-4 md:px-6 mx-auto max-w-7xl relative z-10">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           {/* Text Content */}
           <div className="float-in space-y-4">
-            <div className="inline-block rounded-full bg-brand-purple/10 px-3 py-1 text-sm font-medium text-brand-purple">
+            <div className="inline-block rounded-full bg-brand-purple/20 px-3 py-1 text-sm font-medium text-brand-purple-light">
               AI Tool Community Platform
             </div>
             
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl text-balance">
-              Best <span className="heading-gradient">AI tools</span> to manage your business
+              Best <span className="bg-gradient-to-r from-brand-purple-light to-brand-purple bg-clip-text text-transparent">AI tools</span> to manage your business
             </h1>
             
-            <p className="text-lg text-gray-600 md:text-xl max-w-prose text-balance">
+            <p className="text-lg text-gray-300 md:text-xl max-w-prose text-balance">
               Where AI innovators meet early adopters. Create, showcase, and monetize your AI tools while connecting with the community that values them.
             </p>
             
@@ -36,7 +36,7 @@ const Hero = () => {
                 </Button>
               </Link>
               <Link to="/tools">
-                <Button size="lg" variant="outline" className="border-gray-300">
+                <Button size="lg" variant="outline" className="border-gray-700 text-white hover:bg-gray-800">
                   Explore tools
                 </Button>
               </Link>
@@ -44,7 +44,7 @@ const Hero = () => {
           </div>
           
           {/* Dashboard Image */}
-          <div className="float-in-delay-200 relative bg-white rounded-2xl p-2 subtle-shadow">
+          <div className="float-in-delay-200 relative glass-morphism rounded-2xl p-2">
             <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
               <img
                 src="/lovable-uploads/e83e1f44-29e2-42d4-bc91-496d4f62d2d7.png"

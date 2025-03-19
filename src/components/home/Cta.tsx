@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 const Cta = () => {
   return (
-    <section className="py-16 px-4 bg-brand-purple text-white">
+    <section className="py-16 px-4 bg-brand-purple bg-gradient-to-r from-purple-900 to-brand-purple text-white">
       <div className="max-w-4xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">
           Sign up for your free 14 day trial now!

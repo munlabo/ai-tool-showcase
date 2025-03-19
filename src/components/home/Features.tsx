@@ -28,15 +28,15 @@ const Features = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24 px-4">
+    <section className="py-16 md:py-24 px-4 bg-gradient-to-b from-brand-dark-bg to-gray-900 text-white">
       <div className="max-w-7xl mx-auto text-center mb-12 md:mb-16">
-        <div className="inline-block rounded-full bg-brand-purple/10 px-3 py-1 text-sm font-medium text-brand-purple mb-4">
+        <div className="inline-block rounded-full bg-brand-purple/20 px-3 py-1 text-sm font-medium text-brand-purple-light mb-4">
           FEATURES
         </div>
         <h2 className="text-3xl font-bold sm:text-4xl mb-4">
           Explore Our Features
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto">
+        <p className="text-gray-300 max-w-2xl mx-auto">
           Our platform offers cutting-edge tools for AI creators and enthusiasts alike. Discover, connect, and collaborate with the best minds in AI.
         </p>
       </div>
