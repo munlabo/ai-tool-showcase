@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { BlogPost, BlogCategory, BlogTag } from '@/types/blog';
@@ -13,7 +12,7 @@ export const useBlogPosts = (limit = 10, featured = false, categorySlug?: string
         .from('blog_posts')
         .select(`
           *,
-          author:author_id(id, name, avatar),
+          author:profiles(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('published', true)
@@ -83,7 +82,7 @@ export const useBlogPost = (slug: string | undefined) => {
         .from('blog_posts')
         .select(`
           *,
-          author:author_id(id, name, avatar),
+          author:profiles(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('slug', slug)

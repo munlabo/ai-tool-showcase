@@ -18,6 +18,7 @@ import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import AdminBlogPosts from "./pages/AdminBlogPosts";
 import BlogEditor from "./pages/BlogEditor";
+import ToolEditor from "./pages/ToolEditor";
 import { AuthProvider } from "./hooks/useAuth";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import AdminRoute from "./components/auth/AdminRoute";
@@ -52,6 +53,24 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Tool Editor Routes */}
+            <Route 
+              path="/dashboard/tools/new" 
+              element={
+                <ProtectedRoute>
+                  <ToolEditor />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/tools/edit/:id" 
+              element={
+                <ProtectedRoute>
+                  <ToolEditor />
                 </ProtectedRoute>
               } 
             />
