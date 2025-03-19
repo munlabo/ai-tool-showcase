@@ -122,7 +122,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       toast.success('Registration successful! Please verify your email.');
-      return data;
+      // Modified: Return void instead of data
     } catch (error: any) {
       toast.error(error.message || 'Error signing up');
       throw error;
