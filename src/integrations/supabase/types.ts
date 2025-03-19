@@ -117,6 +117,313 @@ export type Database = {
         }
         Relationships: []
       }
+      categories: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      comments: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          tool_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          tool_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          tool_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      likes: {
+        Row: {
+          created_at: string | null
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_services: {
+        Row: {
+          id: string
+          profile_id: string | null
+          service: string
+        }
+        Insert: {
+          id?: string
+          profile_id?: string | null
+          service: string
+        }
+        Update: {
+          id?: string
+          profile_id?: string | null
+          service?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_services_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profile_skills: {
+        Row: {
+          id: string
+          profile_id: string | null
+          skill: string
+        }
+        Insert: {
+          id?: string
+          profile_id?: string | null
+          skill: string
+        }
+        Update: {
+          id?: string
+          profile_id?: string | null
+          skill?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profile_skills_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar: string | null
+          description: string | null
+          followers_count: number | null
+          github: string | null
+          id: string
+          joined_date: string | null
+          likes_count: number | null
+          location: string | null
+          long_description: string | null
+          name: string | null
+          role: string | null
+          slug: string | null
+          twitter: string | null
+          website: string | null
+        }
+        Insert: {
+          avatar?: string | null
+          description?: string | null
+          followers_count?: number | null
+          github?: string | null
+          id: string
+          joined_date?: string | null
+          likes_count?: number | null
+          location?: string | null
+          long_description?: string | null
+          name?: string | null
+          role?: string | null
+          slug?: string | null
+          twitter?: string | null
+          website?: string | null
+        }
+        Update: {
+          avatar?: string | null
+          description?: string | null
+          followers_count?: number | null
+          github?: string | null
+          id?: string
+          joined_date?: string | null
+          likes_count?: number | null
+          location?: string | null
+          long_description?: string | null
+          name?: string | null
+          role?: string | null
+          slug?: string | null
+          twitter?: string | null
+          website?: string | null
+        }
+        Relationships: []
+      }
+      tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
+      tool_tags: {
+        Row: {
+          tag_id: string
+          tool_id: string
+        }
+        Insert: {
+          tag_id: string
+          tool_id: string
+        }
+        Update: {
+          tag_id?: string
+          tool_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tool_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "tags"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tool_tags_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tools: {
+        Row: {
+          author_id: string
+          category_id: string | null
+          created_at: string | null
+          description: string
+          id: string
+          image_url: string | null
+          like_count: number | null
+          name: string
+          pricing: string | null
+          slug: string
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          author_id: string
+          category_id?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          image_url?: string | null
+          like_count?: number | null
+          name: string
+          pricing?: string | null
+          slug: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          author_id?: string
+          category_id?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          image_url?: string | null
+          like_count?: number | null
+          name?: string
+          pricing?: string | null
+          slug?: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tools_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tools_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

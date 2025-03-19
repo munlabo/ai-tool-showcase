@@ -9,13 +9,21 @@ interface LayoutProps {
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  // Force dark mode initially for the new design
+  // Initialize dark mode
   useEffect(() => {
-    document.documentElement.classList.add('dark');
+    // Check user preference
+    const isDarkMode = localStorage.getItem('theme') === 'dark' || 
+      (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
   }, []);
 
   return (
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+    <ThemeProvider attribute="class" enableSystem>
       <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-brand-dark-bg dark:to-gray-900 text-foreground">
         <Navbar />
         <main className="flex-grow pt-16">{children}</main>

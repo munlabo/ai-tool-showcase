@@ -10,10 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 export function UserNav() {
-  // This would typically use authentication state
-  const isLoggedIn = false;
+  const { user, profile, signOut, isAdmin } = useAuth();
+  const isLoggedIn = !!user;
 
   if (!isLoggedIn) {
     return (
@@ -33,17 +34,17 @@ export function UserNav() {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 w-8 rounded-full">
           <Avatar className="h-8 w-8">
-            <AvatarImage src="/placeholder.svg" alt="User" />
-            <AvatarFallback>U</AvatarFallback>
+            <AvatarImage src={profile?.avatar || "/placeholder.svg"} alt={profile?.name || "User"} />
+            <AvatarFallback>{profile?.name?.charAt(0) || "U"}</AvatarFallback>
           </Avatar>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">User Name</p>
+            <p className="text-sm font-medium leading-none">{profile?.name || "User"}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              user@example.com
+              {user?.email || ""}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -57,8 +58,16 @@ export function UserNav() {
         <DropdownMenuItem>
           <Link to="/dashboard/settings" className="w-full">Settings</Link>
         </DropdownMenuItem>
+        {isAdmin && (
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <Link to="/admin/blog" className="w-full">Admin: Blog</Link>
+            </DropdownMenuItem>
+          </>
+        )}
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={signOut}>
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>
