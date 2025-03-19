@@ -13,7 +13,7 @@ export const useBlogPosts = (limit = 10, featured = false, categorySlug?: string
         .from('blog_posts')
         .select(`
           *,
-          profiles:author_id(id, name, avatar),
+          author:author_id(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('published', true)
@@ -61,11 +61,11 @@ export const useBlogPosts = (limit = 10, featured = false, categorySlug?: string
           created_at: post.created_at,
           updated_at: post.updated_at,
           tags: postTags,
-          author: {
-            id: post.profiles.id,
-            name: post.profiles.name,
-            avatar: post.profiles.avatar,
-          },
+          author: post.author ? {
+            id: post.author.id,
+            name: post.author.name,
+            avatar: post.author.avatar,
+          } : undefined,
         };
       });
     },
@@ -83,7 +83,7 @@ export const useBlogPost = (slug: string | undefined) => {
         .from('blog_posts')
         .select(`
           *,
-          profiles:author_id(id, name, avatar),
+          author:author_id(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('slug', slug)
@@ -116,11 +116,11 @@ export const useBlogPost = (slug: string | undefined) => {
         created_at: data.created_at,
         updated_at: data.updated_at,
         tags: postTags,
-        author: {
-          id: data.profiles.id,
-          name: data.profiles.name,
-          avatar: data.profiles.avatar,
-        },
+        author: data.author ? {
+          id: data.author.id,
+          name: data.author.name,
+          avatar: data.author.avatar,
+        } : undefined,
       };
     },
     enabled: !!slug,
