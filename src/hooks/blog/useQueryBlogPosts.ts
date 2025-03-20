@@ -12,7 +12,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
         .from('blog_posts')
         .select(`
           *,
-          author:profiles(id, name, avatar),
+          profiles!blog_posts_author_id_fkey(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('published', true)
@@ -48,6 +48,8 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
             ).filter(Boolean)
           : [];
 
+        const authorData = post.profiles && post.profiles.length > 0 ? post.profiles[0] : null;
+
         return {
           id: post.id,
           title: post.title,
@@ -60,10 +62,10 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
           created_at: post.created_at,
           updated_at: post.updated_at,
           tags: postTags,
-          author: post.author ? {
-            id: post.author.id,
-            name: post.author.name,
-            avatar: post.author.avatar,
+          author: authorData ? {
+            id: authorData.id,
+            name: authorData.name,
+            avatar: authorData.avatar,
           } : undefined,
         };
       });

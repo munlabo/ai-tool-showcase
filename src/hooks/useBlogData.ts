@@ -7,16 +7,16 @@ import {
   useQueryBlogPosts,
   useQueryBlogTags,
   useQueryBlogCategories,
-  useCreateBlogPost,
-  useUpdateBlogPost, 
-  useDeleteBlogPost 
+  useCreateBlogPost as createBlogPost,
+  useUpdateBlogPost as updateBlogPost, 
+  useDeleteBlogPost as deleteBlogPost 
 } from './blog';
 
-// Maintain the old exports with the same names
+// Re-export with the legacy names
 export const useBlogPost = useQueryBlogPost;
 export const useBlogPosts = useQueryBlogPosts;
 export const useBlogTags = useQueryBlogTags;
 export const useBlogCategories = useQueryBlogCategories;
-export const useCreateBlogPost = useCreateBlogPost;
-export const useUpdateBlogPost = useUpdateBlogPost;
-export const useDeleteBlogPost = useDeleteBlogPost;
+export const useCreateBlogPost = createBlogPost;
+export const useUpdateBlogPost = updateBlogPost;
+export const useDeleteBlogPost = deleteBlogPost;

@@ -14,7 +14,7 @@ export const useQueryBlogPost = (slug: string | undefined) => {
         .from('blog_posts')
         .select(`
           *,
-          author:profiles(id, name, avatar),
+          profiles!blog_posts_author_id_fkey(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('slug', slug)
@@ -35,6 +35,8 @@ export const useQueryBlogPost = (slug: string | undefined) => {
           ).filter(Boolean)
         : [];
 
+      const authorData = data.profiles && data.profiles.length > 0 ? data.profiles[0] : null;
+
       return {
         id: data.id,
         title: data.title,
@@ -47,10 +49,10 @@ export const useQueryBlogPost = (slug: string | undefined) => {
         created_at: data.created_at,
         updated_at: data.updated_at,
         tags: postTags,
-        author: data.author ? {
-          id: data.author.id,
-          name: data.author.name,
-          avatar: data.author.avatar,
+        author: authorData ? {
+          id: authorData.id,
+          name: authorData.name,
+          avatar: authorData.avatar,
         } : undefined,
       };
     },
