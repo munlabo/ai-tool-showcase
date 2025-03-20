@@ -1,18 +1,7 @@
+
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Save, Image, X, Tag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { 
-  Form, 
-  FormControl, 
-  FormField, 
-  FormItem, 
-  FormLabel, 
-  FormMessage 
-} from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
+import { Form } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -22,12 +11,13 @@ import {
 } from '@/hooks/useBlogData';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 import { BlogPost } from '@/types/blog';
-import { ImageUploader } from './ImageUploader';
-import TagManager from './TagManager';
-import CategoryCreator from '@/components/shared/CategoryCreator';
-import TagCreator from '@/components/shared/TagCreator';
+import BlogMetadataFields from './BlogMetadataFields';
+import BlogTagsSection from './BlogTagsSection';
+import BlogFeaturedImageField from './BlogFeaturedImageField';
+import BlogContentField from './BlogContentField';
+import BlogPublishedToggle from './BlogPublishedToggle';
+import BlogFormActions from './BlogFormActions';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -49,8 +39,6 @@ interface BlogEditorFormProps {
 
 const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
   const navigate = useNavigate();
-  
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [currentTags, setCurrentTags] = useState<string[]>(blogPost?.tags || []);
   
   const createMutation = useCreateBlogPost();
@@ -79,12 +67,6 @@ const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
         .replace(/^-+|-+$/g, '');
       form.setValue('slug', slug);
     }
-  };
-
-  // Handle image selection
-  const handleImageSelected = (imageUrl: string) => {
-    form.setValue('featured_image', imageUrl);
-    setPreviewImage(imageUrl);
   };
 
   // Handle tag operations
@@ -138,167 +120,32 @@ const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
     }
   };
 
-  // Handle new tag creation
-  const handleTagCreated = (tag: { id: string; name: string }) => {
-    const newTags = [...currentTags, tag.name];
-    setCurrentTags(newTags);
-    form.setValue('tags', newTags);
-    toast.success(`Tag "${tag.name}" added to post`);
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Title */}
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Title</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Enter post title" 
-                  {...field} 
-                  onChange={(e) => {
-                    field.onChange(e);
-                    autoGenerateSlug(e.target.value);
-                  }}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <BlogMetadataFields 
+          control={form.control} 
+          handleTitleChange={autoGenerateSlug} 
         />
         
-        {/* Slug */}
-        <FormField
-          control={form.control}
-          name="slug"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Slug</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="enter-post-slug" 
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <BlogTagsSection 
+          currentTags={currentTags} 
+          onTagsChange={handleTagsChange} 
         />
         
-        {/* Excerpt */}
-        <FormField
-          control={form.control}
-          name="excerpt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Excerpt</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Brief summary of the post" 
-                  {...field} 
-                  rows={3}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+        <BlogFeaturedImageField 
+          control={form.control} 
+          initialImage={blogPost?.featured_image} 
         />
         
-        {/* Tags */}
-        <div className="space-y-2">
-          <div className="flex justify-between items-center">
-            <FormLabel>Tags</FormLabel>
-            <TagCreator 
-              table="blog_tags"
-              onTagCreated={handleTagCreated}
-            />
-          </div>
-          <TagManager 
-            initialTags={currentTags}
-            onTagsChange={handleTagsChange}
-          />
-        </div>
+        <BlogContentField control={form.control} />
         
-        {/* Featured Image */}
-        <FormField
-          control={form.control}
-          name="featured_image"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Featured Image</FormLabel>
-              <ImageUploader
-                previewImage={previewImage}
-                onImageSelected={handleImageSelected}
-                onImageRemoved={() => {
-                  setPreviewImage(null);
-                  form.setValue('featured_image', '');
-                }}
-                imageUrl={field.value}
-                onChange={field.onChange}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
+        <BlogPublishedToggle control={form.control} />
+        
+        <BlogFormActions 
+          isPending={createMutation.isPending || updateMutation.isPending} 
+          isPublished={form.getValues('published')} 
         />
-        
-        {/* Content */}
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Write your post content here..." 
-                  {...field} 
-                  rows={15}
-                  className="font-mono"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        
-        {/* Published Toggle */}
-        <FormField
-          control={form.control}
-          name="published"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">
-                  {field.value ? 'Published' : 'Draft'}
-                </FormLabel>
-                <p className="text-sm text-muted-foreground">
-                  {field.value
-                    ? 'This post is live and visible to all users'
-                    : 'This post is a draft and only visible to administrators'}
-                </p>
-              </div>
-              <FormControl>
-                <Switch
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        
-        <Button 
-          type="submit"
-          disabled={createMutation.isPending || updateMutation.isPending}
-          className="w-full md:w-auto"
-        >
-          <Save className="mr-2 h-4 w-4" />
-          Save {form.getValues('published') ? 'Post' : 'Draft'}
-        </Button>
       </form>
     </Form>
   );
