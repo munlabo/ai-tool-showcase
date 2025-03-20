@@ -12,7 +12,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
         .from('blog_posts')
         .select(`
           *,
-          profiles!blog_posts_author_id_fkey(id, name, avatar),
+          profiles:author_id(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('published', true)
@@ -26,7 +26,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
         query = query.eq('category_slug', categorySlug);
       }
 
-      if (limit) {
+      if (limit > 0) {
         query = query.limit(limit);
       }
 
@@ -48,7 +48,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
             ).filter(Boolean)
           : [];
 
-        const authorData = post.profiles && post.profiles.length > 0 ? post.profiles[0] : null;
+        const authorData = post.profiles || null;
 
         return {
           id: post.id,

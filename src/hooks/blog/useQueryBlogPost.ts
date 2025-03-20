@@ -14,7 +14,7 @@ export const useQueryBlogPost = (slug: string | undefined) => {
         .from('blog_posts')
         .select(`
           *,
-          profiles!blog_posts_author_id_fkey(id, name, avatar),
+          profiles:author_id(id, name, avatar),
           blog_post_tags(tag_id)
         `)
         .eq('slug', slug)
@@ -35,7 +35,7 @@ export const useQueryBlogPost = (slug: string | undefined) => {
           ).filter(Boolean)
         : [];
 
-      const authorData = data.profiles && data.profiles.length > 0 ? data.profiles[0] : null;
+      const authorData = data.profiles || null;
 
       return {
         id: data.id,
