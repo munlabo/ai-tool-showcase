@@ -30,6 +30,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
       const { data: posts, error } = await query;
 
       if (error) throw error;
+      if (!posts || posts.length === 0) return [];
 
       // Fetch all post-tag relationships for these posts
       const postIds = posts.map(post => post.id);
@@ -67,7 +68,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
 
         const postTags = postTagIds
           .map(tagId => {
-            const tag = tagsData.find(t => t.id === tagId);
+            const tag = tagsData?.find(t => t.id === tagId);
             return tag ? tag.name : null;
           })
           .filter(Boolean) as string[];

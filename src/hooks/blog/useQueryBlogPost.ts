@@ -45,9 +45,10 @@ export const useQueryBlogPost = (slug: string | undefined) => {
 
       // Map tags to post
       const postTags = postTagsData
-        ? postTagsData.map((tt) => 
-            tagsData.find((tag) => tag.id === tt.tag_id)?.name
-          ).filter(Boolean)
+        ? postTagsData.map((tt) => {
+            const tag = tagsData.find((tag) => tag.id === tt.tag_id);
+            return tag ? tag.name : null;
+          }).filter(Boolean)
         : [];
 
       // Create the final blog post object
@@ -62,7 +63,7 @@ export const useQueryBlogPost = (slug: string | undefined) => {
         published: post.published,
         created_at: post.created_at,
         updated_at: post.updated_at,
-        tags: postTags,
+        tags: postTags as string[],
         featured: post.featured || false
       };
 
