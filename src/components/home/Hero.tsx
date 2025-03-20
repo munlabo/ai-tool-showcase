@@ -2,20 +2,25 @@
 import { ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { AuroraBackground } from '@/components/ui/aurora-background';
+import { motion } from 'framer-motion';
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden bg-brand-dark-bg border-b border-gray-800 pt-16 pb-20 md:pt-24 md:pb-32 text-white">
-      {/* Background Decorations */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-64 h-64 bg-brand-purple/20 rounded-full blur-3xl opacity-60"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-indigo-900/20 rounded-full blur-3xl opacity-60"></div>
-      </div>
-      
+    <AuroraBackground className="relative overflow-hidden bg-brand-dark-bg border-b border-gray-800 pt-16 pb-20 md:pt-24 md:pb-32 text-white">
       <div className="container px-4 md:px-6 mx-auto max-w-7xl relative z-10">
         <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
           {/* Text Content */}
-          <div className="float-in space-y-4">
+          <motion.div 
+            initial={{ opacity: 0.0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: 0.3,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="space-y-4"
+          >
             <div className="inline-block rounded-full bg-brand-purple/20 px-3 py-1 text-sm font-medium text-brand-purple-light">
               AI Tool Community Platform
             </div>
@@ -41,10 +46,19 @@ const Hero = () => {
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
           
           {/* Dashboard Image */}
-          <div className="float-in-delay-200 relative glass-morphism rounded-2xl p-2">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{
+              delay: 0.5,
+              duration: 0.8,
+              ease: "easeInOut",
+            }}
+            className="relative glass-morphism rounded-2xl p-2"
+          >
             <div className="relative overflow-hidden rounded-xl aspect-[4/3]">
               <img
                 src="/lovable-uploads/e83e1f44-29e2-42d4-bc91-496d4f62d2d7.png"
@@ -63,10 +77,10 @@ const Hero = () => {
                 </svg>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </div>
-    </section>
+    </AuroraBackground>
   );
 };
 
