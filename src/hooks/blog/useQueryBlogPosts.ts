@@ -2,6 +2,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { BlogPost } from '@/types/blog';
+import { PostgrestFilterBuilder } from '@supabase/postgrest-js';
 
 // Get all blog posts
 export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: string) => {
