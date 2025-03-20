@@ -10,7 +10,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
     queryKey: ['blogPosts', limit, featured, categorySlug],
     queryFn: async () => {
       // Fetch blog posts
-      let query = supabase
+      let query: any = supabase
         .from('blog_posts')
         .select('*')
         .eq('published', true)

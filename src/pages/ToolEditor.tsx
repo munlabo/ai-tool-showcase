@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
@@ -30,6 +29,8 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useTool, useCategories, useTags } from '@/hooks/useSupabaseData';
 import Layout from '@/components/layout/Layout';
+import CategoryCreator from '@/components/shared/CategoryCreator';
+import TagCreator from '@/components/shared/TagCreator';
 
 const formSchema = z.object({
   name: z.string().min(3, 'Name must be at least 3 characters'),
@@ -333,7 +334,17 @@ const ToolEditor = () => {
                   name="category_id"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category</FormLabel>
+                      <div className="flex justify-between items-center">
+                        <FormLabel>Category</FormLabel>
+                        <CategoryCreator 
+                          onCategoryCreated={(category) => {
+                            if (categories) {
+                              // Add the new category to the list
+                              field.onChange(category.id);
+                            }
+                          }} 
+                        />
+                      </div>
                       <Select 
                         onValueChange={field.onChange} 
                         defaultValue={field.value}
@@ -388,7 +399,17 @@ const ToolEditor = () => {
                 
                 {/* Tags */}
                 <div className="space-y-2">
-                  <FormLabel>Tags</FormLabel>
+                  <div className="flex justify-between items-center">
+                    <FormLabel>Tags</FormLabel>
+                    <TagCreator 
+                      onTagCreated={(tag) => {
+                        if (tags) {
+                          // Add the new tag to the current tags
+                          addTag(tag.id);
+                        }
+                      }} 
+                    />
+                  </div>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {currentTags.map((tagId, idx) => {
                       const tagName = tags.find(t => t.id === tagId)?.name || tagId;

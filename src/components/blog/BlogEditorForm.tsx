@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Save, Image, X, Tag } from 'lucide-react';
@@ -27,6 +26,8 @@ import { Badge } from '@/components/ui/badge';
 import { BlogPost } from '@/types/blog';
 import { ImageUploader } from './ImageUploader';
 import TagManager from './TagManager';
+import CategoryCreator from '@/components/shared/CategoryCreator';
+import TagCreator from '@/components/shared/TagCreator';
 
 const formSchema = z.object({
   title: z.string().min(5, 'Title must be at least 5 characters'),
@@ -50,7 +51,7 @@ const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
   const navigate = useNavigate();
   
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [currentTags, setCurrentTags] = useState<string[]>([]);
+  const [currentTags, setCurrentTags] = useState<string[]>(blogPost?.tags || []);
   
   const createMutation = useCreateBlogPost();
   const updateMutation = useUpdateBlogPost();
@@ -137,6 +138,14 @@ const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
     }
   };
 
+  // Handle new tag creation
+  const handleTagCreated = (tag: { id: string; name: string }) => {
+    const newTags = [...currentTags, tag.name];
+    setCurrentTags(newTags);
+    form.setValue('tags', newTags);
+    toast.success(`Tag "${tag.name}" added to post`);
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -200,10 +209,19 @@ const BlogEditorForm = ({ blogPost, isEditMode }: BlogEditorFormProps) => {
         />
         
         {/* Tags */}
-        <TagManager 
-          initialTags={currentTags}
-          onTagsChange={handleTagsChange}
-        />
+        <div className="space-y-2">
+          <div className="flex justify-between items-center">
+            <FormLabel>Tags</FormLabel>
+            <TagCreator 
+              table="blog_tags"
+              onTagCreated={handleTagCreated}
+            />
+          </div>
+          <TagManager 
+            initialTags={currentTags}
+            onTagsChange={handleTagsChange}
+          />
+        </div>
         
         {/* Featured Image */}
         <FormField
