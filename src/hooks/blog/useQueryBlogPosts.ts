@@ -31,10 +31,12 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
 
       if (error) throw error;
 
-      // Fetch all post-tag relationships
+      // Fetch all post-tag relationships for these posts
+      const postIds = posts.map(post => post.id);
       const { data: postTagsData, error: postTagsError } = await supabase
         .from('blog_post_tags')
-        .select('post_id, tag_id');
+        .select('post_id, tag_id')
+        .in('post_id', postIds);
 
       if (postTagsError) throw postTagsError;
 
@@ -46,7 +48,7 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
       if (tagsError) throw tagsError;
 
       // Fetch all authors in one query
-      const authorIds = [...new Set(posts.map(post => post.author_id))];
+      const authorIds = posts.map(post => post.author_id);
       const { data: authorsData, error: authorsError } = await supabase
         .from('profiles')
         .select('id, name, avatar')
@@ -58,15 +60,20 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
       return posts.map((post): BlogPost => {
         // Find tags for this post
         const postTagIds = postTagsData
-          .filter(pt => pt.post_id === post.id)
-          .map(pt => pt.tag_id);
+          ? postTagsData
+              .filter(pt => pt.post_id === post.id)
+              .map(pt => pt.tag_id)
+          : [];
 
         const postTags = postTagIds
-          .map(tagId => tagsData.find(tag => tag.id === tagId)?.name)
+          .map(tagId => {
+            const tag = tagsData.find(t => t.id === tagId);
+            return tag ? tag.name : null;
+          })
           .filter(Boolean) as string[];
 
         // Find author for this post
-        const author = authorsData.find(a => a.id === post.author_id);
+        const author = authorsData?.find(a => a.id === post.author_id);
 
         const blogPost: BlogPost = {
           id: post.id,
