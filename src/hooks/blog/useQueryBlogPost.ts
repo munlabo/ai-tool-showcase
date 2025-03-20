@@ -10,17 +10,22 @@ export const useQueryBlogPost = (slug: string | undefined) => {
     queryFn: async () => {
       if (!slug) return null;
 
-      const { data, error } = await supabase
+      // First fetch the blog post
+      const { data: post, error } = await supabase
         .from('blog_posts')
-        .select(`
-          *,
-          profiles:author_id(id, name, avatar),
-          blog_post_tags(tag_id)
-        `)
+        .select('*')
         .eq('slug', slug)
         .single();
 
       if (error) throw error;
+
+      // Fetch tags for this post
+      const { data: postTagsData, error: postTagsError } = await supabase
+        .from('blog_post_tags')
+        .select('tag_id')
+        .eq('post_id', post.id);
+
+      if (postTagsError) throw postTagsError;
 
       // Fetch all tags to map them to the post
       const { data: tagsData, error: tagsError } = await supabase
@@ -29,32 +34,48 @@ export const useQueryBlogPost = (slug: string | undefined) => {
 
       if (tagsError) throw tagsError;
 
-      const postTags = data.blog_post_tags
-        ? data.blog_post_tags.map((tt: { tag_id: string }) => 
+      // Fetch author profile
+      const { data: authorData, error: authorError } = await supabase
+        .from('profiles')
+        .select('id, name, avatar')
+        .eq('id', post.author_id)
+        .maybeSingle();
+
+      if (authorError) throw authorError;
+
+      // Map tags to post
+      const postTags = postTagsData
+        ? postTagsData.map((tt) => 
             tagsData.find((tag) => tag.id === tt.tag_id)?.name
           ).filter(Boolean)
         : [];
 
-      const authorData = data.profiles || null;
-
-      return {
-        id: data.id,
-        title: data.title,
-        slug: data.slug,
-        content: data.content,
-        excerpt: data.excerpt,
-        featured_image: data.featured_image,
-        author_id: data.author_id,
-        published: data.published,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
+      // Create the final blog post object
+      const blogPost: BlogPost = {
+        id: post.id,
+        title: post.title,
+        slug: post.slug,
+        content: post.content,
+        excerpt: post.excerpt,
+        featured_image: post.featured_image,
+        author_id: post.author_id,
+        published: post.published,
+        created_at: post.created_at,
+        updated_at: post.updated_at,
         tags: postTags,
-        author: authorData ? {
+        featured: post.featured || false
+      };
+
+      // Add author if available
+      if (authorData) {
+        blogPost.author = {
           id: authorData.id,
           name: authorData.name,
-          avatar: authorData.avatar,
-        } : undefined,
-      };
+          avatar: authorData.avatar
+        };
+      }
+
+      return blogPost;
     },
     enabled: !!slug,
   });

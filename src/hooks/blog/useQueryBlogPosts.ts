@@ -8,13 +8,10 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
   return useQuery({
     queryKey: ['blogPosts', limit, featured, categorySlug],
     queryFn: async () => {
+      // Fetch blog posts
       let query = supabase
         .from('blog_posts')
-        .select(`
-          *,
-          profiles:author_id(id, name, avatar),
-          blog_post_tags(tag_id)
-        `)
+        .select('*')
         .eq('published', true)
         .order('created_at', { ascending: false });
 
@@ -30,27 +27,48 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
         query = query.limit(limit);
       }
 
-      const { data, error } = await query;
+      const { data: posts, error } = await query;
 
       if (error) throw error;
 
-      // Fetch all tags to map them to posts
+      // Fetch all post-tag relationships
+      const { data: postTagsData, error: postTagsError } = await supabase
+        .from('blog_post_tags')
+        .select('post_id, tag_id');
+
+      if (postTagsError) throw postTagsError;
+
+      // Fetch all tags
       const { data: tagsData, error: tagsError } = await supabase
         .from('blog_tags')
         .select('*');
 
       if (tagsError) throw tagsError;
 
-      return data.map((post): BlogPost => {
-        const postTags = post.blog_post_tags
-          ? post.blog_post_tags.map((tt: { tag_id: string }) => 
-              tagsData.find((tag) => tag.id === tt.tag_id)?.name
-            ).filter(Boolean)
-          : [];
+      // Fetch all authors in one query
+      const authorIds = [...new Set(posts.map(post => post.author_id))];
+      const { data: authorsData, error: authorsError } = await supabase
+        .from('profiles')
+        .select('id, name, avatar')
+        .in('id', authorIds);
 
-        const authorData = post.profiles || null;
+      if (authorsError) throw authorsError;
 
-        return {
+      // Map posts to BlogPost objects
+      return posts.map((post): BlogPost => {
+        // Find tags for this post
+        const postTagIds = postTagsData
+          .filter(pt => pt.post_id === post.id)
+          .map(pt => pt.tag_id);
+
+        const postTags = postTagIds
+          .map(tagId => tagsData.find(tag => tag.id === tagId)?.name)
+          .filter(Boolean) as string[];
+
+        // Find author for this post
+        const author = authorsData.find(a => a.id === post.author_id);
+
+        const blogPost: BlogPost = {
           id: post.id,
           title: post.title,
           slug: post.slug,
@@ -62,12 +80,19 @@ export const useQueryBlogPosts = (limit = 10, featured = false, categorySlug?: s
           created_at: post.created_at,
           updated_at: post.updated_at,
           tags: postTags,
-          author: authorData ? {
-            id: authorData.id,
-            name: authorData.name,
-            avatar: authorData.avatar,
-          } : undefined,
+          featured: post.featured || false
         };
+
+        // Add author if available
+        if (author) {
+          blogPost.author = {
+            id: author.id,
+            name: author.name,
+            avatar: author.avatar
+          };
+        }
+
+        return blogPost;
       });
     },
   });
